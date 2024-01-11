@@ -14,14 +14,46 @@ model Student {
   id        Int       @id @default(autoincrement())
   firstName String
   lastName  String
-  git       String
+  git       String    @unique
   email     String    @unique
   comment   String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  events    StudentEvent[]
 }
 
 model Status {
-  id    Int @id @default(autoincrement())
-  title 
+  id      Int     @id @default(autoincrement())
+  title   String  @unique
+  events  StudentEvent[]
+}
+
+model StudentEvent {
+  id        Int     @id @default(autoincrement())
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+  statusId  Int
+  status    Status  @relation(fields: [statusId], references: [id])
+}
+
+model Group {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  playlistUrl String
+  codeUrl     String
+  events      GroupEvent[]
+}
+
+model GroupStatus {
+  id          Int     @id @default(autoincrement())
+  title       String  @unique
+  events      GroupEvent[]
+}
+
+model GroupEvent {
+  id          Int     @id @default(autoincrement())
+  groupId     Int
+  group       Group   @relation(fields: [groupId], references: [id])
+  statusId    Int
+  status      GroupStatus  @relation(fields: [statusId], references: [id])
 }
