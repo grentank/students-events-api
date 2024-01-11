@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Student } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import getNextPhase from './helpers/findNextPhase';
+import getNextPhase from './helpers/getNextPhase';
 import isStatusString from './helpers/isStatusString';
 
 @Injectable()
