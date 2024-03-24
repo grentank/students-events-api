@@ -11,15 +11,28 @@ datasource db {
 }
 
 model Student {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  git               String    @unique
+  email             String    @unique
+  telegram          String?
+  comment           String?
+  currentGroupId    Int
+  group             Group     @relation(fields: [currentGroupId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  events            StudentEvent[]
+  bonuses           BonusScore[]
+}
+
+model BonusScore {
   id        Int       @id @default(autoincrement())
-  firstName String
-  lastName  String
-  git       String    @unique
-  email     String    @unique
+  value     Int
   comment   String?
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  events    StudentEvent[]
+  studentId Int
+  student   Student   @relation(fields: [studentId], references: [id])
 }
 
 model Status {
@@ -37,23 +50,32 @@ model StudentEvent {
 }
 
 model Group {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  playlistUrl String
-  codeUrl     String
-  events      GroupEvent[]
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  playlistUrl     String
+  codeUrl         String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  events          GroupEvent[]
+  currentStudents Student[]
 }
 
 model GroupStatus {
-  id          Int     @id @default(autoincrement())
-  title       String  @unique
+  id          Int           @id @default(autoincrement())
+  title       String        @unique
   events      GroupEvent[]
 }
 
 model GroupEvent {
-  id          Int     @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   groupId     Int
-  group       Group   @relation(fields: [groupId], references: [id])
+  group       Group         @relation(fields: [groupId], references: [id])
   statusId    Int
-  status      GroupStatus  @relation(fields: [statusId], references: [id])
+  status      GroupStatus   @relation(fields: [statusId], references: [id])
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  hashpass    String
 }
