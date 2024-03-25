@@ -1,16 +1,12 @@
 import { Router } from 'express';
-import toSync from '../controllers/toSync';
 import tokensController from '../controllers/tokens';
 import authController from '../controllers/auth';
 
 const authRouter = Router();
 
-authRouter.post('/signup', toSync(authController.signUp), tokensController.issueTokens);
-authRouter.post('/login', toSync(authController.logIn), tokensController.issueTokens);
+authRouter.post('/signup', authController.signUp, tokensController.issueTokens);
+authRouter.post('/login', authController.logIn, tokensController.issueTokens);
+authRouter.get('/check', tokensController.checkAuth);
 authRouter.get('/logout', tokensController.clearTokens);
-
-authRouter.get('/check', verifyRefreshToken, (req, res) => {
-  res.json({ user: res.locals.user });
-});
 
 export default authRouter;

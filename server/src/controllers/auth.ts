@@ -1,14 +1,14 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 import type { PrismaClient } from '@prisma/client';
-import 'dotenv/config'
+import 'dotenv/config';
 import authBody from '../utils/pipes/authBody';
 import prismaDb from '../db';
 
 class AuthController {
   constructor(private db: PrismaClient) {}
 
-  public signUp = async (req: Request, res: Response, next: NextFunction) => {
+  public signUp: RequestHandler = async (req, res, next) => {
     try {
       const { email, password, secret } = authBody.parse(req.body);
 
@@ -27,7 +27,7 @@ class AuthController {
     }
   };
 
-  public logIn = async (req: Request, res: Response, next: NextFunction) => {
+  public logIn: RequestHandler = async (req, res, next) => {
     try {
       const { email, password } = authBody.parse(req.body);
       if (!email || !password)
@@ -39,7 +39,7 @@ class AuthController {
       const valid = await bcrypt.compare(password, user.hashpass);
       if (!valid) return res.status(401).json({ message: 'Incorrect password' });
       res.locals.userId = user.id;
-      next();
+      return next();
     } catch (e) {
       console.log(e);
       return res.sendStatus(500);

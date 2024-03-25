@@ -1,5 +1,5 @@
 import express from 'express';
-import toSync from './controllers/toSync';
+import toSync from './utils/transformations/toSync';
 import db from './db';
 
 const app = express();
