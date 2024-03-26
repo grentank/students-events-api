@@ -4,7 +4,6 @@ import db from './db';
 
 const app = express();
 
-
 app.get(
   '/',
   toSync(async (req, res) => {
