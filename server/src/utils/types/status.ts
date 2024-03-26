@@ -6,7 +6,7 @@ export const phases = ['0', '1', '2', '3'] as const;
 
 export type PhasesString = (typeof phases)[number];
 
-export const extras = ['Выпускник'] as const;
+export const extras = ['Выпускник', 'Перевёлся в другое направление'] as const;
 
 export type ExtraStatus = (typeof extras)[number];
 
