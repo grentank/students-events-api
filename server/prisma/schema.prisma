@@ -43,6 +43,7 @@ model Status {
 
 model StudentEvent {
   id        Int       @id @default(autoincrement())
+  comment   String?
   studentId Int
   student   Student   @relation(fields: [studentId], references: [id])
   statusId  Int
