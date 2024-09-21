@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id                Int       @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  secondName        String?
+  git               String    @unique
+  email             String    @unique
+  telegram          String?
+  comment           String?
+  currentGroupId    Int
+  group             Group     @relation(fields: [currentGroupId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  events            StudentEvent[]
+  bonuses           BonusScore[]
+}
+
+model BonusScore {
+  id        Int       @id @default(autoincrement())
+  value     Int
+  comment   String?
+  createdAt DateTime  @default(now())
+  studentId Int
+  student   Student   @relation(fields: [studentId], references: [id])
+}
+
+model Status {
+  id      Int     @id @default(autoincrement())
+  text    String  @unique
+  events  StudentEvent[]
+}
+
+model StudentEvent {
+  id        Int       @id @default(autoincrement())
+  comment   String?
+  studentId Int
+  student   Student   @relation(fields: [studentId], references: [id])
+  statusId  Int
+  status    Status    @relation(fields: [statusId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model Group {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  playlistUrl     String
+  codeUrl         String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  events          GroupEvent[]
+  currentStudents Student[]
+}
+
+model GroupStatus {
+  id          Int           @id @default(autoincrement())
+  text        String        @unique
+  events      GroupEvent[]
+}
+
+model GroupEvent {
+  id          Int           @id @default(autoincrement())
+  groupId     Int
+  group       Group         @relation(fields: [groupId], references: [id])
+  statusId    Int
+  status      GroupStatus   @relation(fields: [statusId], references: [id])
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  hashpass    String
+}
