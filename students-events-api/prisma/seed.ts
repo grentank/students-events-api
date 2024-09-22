@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { studentStatuses } from '../src/studentStatuses/studentStatus.schema';
 import seedGroupsFromDataFolder from './groupSeeds/seedGroupByName';
+import seedStudentsFromFiles from './groupSeeds/seedStudentsFromFiles';
 // import fs from 'fs/promises';
 const prisma = new PrismaClient();
 
@@ -10,6 +11,7 @@ async function main() {
   });
 
   await seedGroupsFromDataFolder(prisma);
+  await seedStudentsFromFiles(prisma);
 }
 
 main()

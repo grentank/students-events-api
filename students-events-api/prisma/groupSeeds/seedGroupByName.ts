@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const { readFile, readdir } = require('fs/promises');
 
 async function seedGroupByName(groupName: string, prisma: PrismaClient) {
-  const fileData = await readFile(`./prisma/data/${groupName}`, 'utf8');
+  const fileData = await readFile(`./prisma/data/groups/${groupName}`, 'utf8');
   const [groupData, studentsData] = fileData.split('\n\n');
   const [name, playlistUrl, codeUrl, creationDate] = groupData.split('\n');
   const group = await prisma.group.create({
@@ -26,6 +26,6 @@ async function seedGroupByName(groupName: string, prisma: PrismaClient) {
 }
 
 export default async function seedGroupsFromDataFolder(prisma: PrismaClient) {
-  const filenames = await readdir('./prisma/data', 'utf8');
+  const filenames = await readdir('./prisma/data/groups', 'utf8');
   return Promise.all(filenames.map((filename) => seedGroupByName(filename, prisma)));
 }
