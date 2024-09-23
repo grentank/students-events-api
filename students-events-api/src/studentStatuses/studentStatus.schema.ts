@@ -25,8 +25,12 @@ export const studentStatuses = [
   { id: 19, text: 'Перевод в другое направление' },
   { id: 20, text: 'Продолжение учёбы после паузы' },
   { id: 21, text: 'Возврат денег' },
-  { id: 22, text: 'Отчисление' },
+  { id: 22, text: 'Отчисление по иным причинам' },
   { id: 23, text: 'Каникулы' },
+  { id: 24, text: 'Отчисление с 0 фазы за экзамен' },
+  { id: 25, text: 'Отчисление с 1 фазы за экзамен' },
+  { id: 26, text: 'Отчисление с 2 фазы за экзамен' },
+  { id: 27, text: 'Отчисление с 3 фазы за экзамен' },
 ] as const;
 
 export type StudentStatusReadonly = typeof studentStatuses;
@@ -55,8 +59,12 @@ export enum StudentStatusTextEnum {
   transfer = 'Перевод в другое направление',
   continueStudy = 'Продолжение учёбы после паузы',
   refund = 'Возврат денег',
-  dropout = 'Отчисление',
+  dropout = 'Отчисление по иным причинам',
   holidays = 'Каникулы',
+  dropoutExam0 = 'Отчисление с 0 фазы за экзамен',
+  dropoutExam1 = 'Отчисление с 1 фазы за экзамен',
+  dropoutExam2 = 'Отчисление с 2 фазы за экзамен',
+  dropoutExam3 = 'Отчисление с 3 фазы за экзамен',
 }
 
 export function stringIsStudentStatus(str: string): str is StudentStatusText {
