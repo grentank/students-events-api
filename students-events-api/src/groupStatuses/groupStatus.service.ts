@@ -3,7 +3,7 @@ import { Group, Prisma, Student } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class GroupsService {
+export class GroupStatusService {
   constructor(private prisma: PrismaService) {}
 
   async group(userWhereUniqueInput: Prisma.GroupWhereUniqueInput): Promise<Group | null> {

@@ -10,4 +10,9 @@ export class StudentsController {
   getAllStudents(): Promise<Student[]> {
     return this.service.students({});
   }
+
+  @Get('active')
+  getActiveStudents() {
+    
+  }
 }

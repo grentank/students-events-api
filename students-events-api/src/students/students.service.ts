@@ -14,6 +14,17 @@ export class StudentService {
     });
   }
 
+  async getStudentsByPhase(phase: number | string): Promise<Student[]> {
+    const allGroups = await this.prisma.group.findMany({
+      include: {
+        events: true,
+      },
+    });
+    return this.prisma.student.findMany({
+      where: {},
+    });
+  }
+
   //   async user(
   //     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   //   ): Promise<User | null> {
