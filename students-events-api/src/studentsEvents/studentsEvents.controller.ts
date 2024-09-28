@@ -7,7 +7,7 @@ export class StudentsEventsController {
   constructor(private readonly service: StudentsEventsService) {}
 
   @Get('students/:id')
-  getEventsById(@Param('id') studentId: string): Promise<StudentEvent[]> {
+  getEventsByStudentId(@Param('id') studentId: string): Promise<StudentEvent[]> {
     return this.service.getEventsByStudentId(Number(studentId));
   }
 }

@@ -14,6 +14,9 @@ export class StudentsEventsService {
       include: {
         status: true,
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
   }
 
