@@ -23,8 +23,8 @@ async function seedStudentsFile(filename, prisma: PrismaClient) {
   const rows = fileData.split('\n');
   for (const row of rows) {
     const [name, ...events] = row.split(';');
-    const [firstName, lastName] = name.split(' ');
-    const student = await prisma.student.findFirst({ where: { firstName, lastName } });
+    const [firstName, lastName, secondName] = name.split(' ');
+    const student = await prisma.student.findFirst({ where: { firstName, lastName, secondName } });
     if (!student) throw new Error(`Студент ${name} не найден!`);
     await prisma.studentEvent.createMany({
       data: events.map((event) => ({

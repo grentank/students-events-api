@@ -1,37 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { Group, Prisma, Student } from '@prisma/client';
+import { Group, GroupStatus, Prisma, Student } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { GroupStatusText } from './groupStatus.schema';
 
 @Injectable()
 export class GroupStatusService {
   constructor(private prisma: PrismaService) {}
 
-  async group(userWhereUniqueInput: Prisma.GroupWhereUniqueInput): Promise<Group | null> {
-    return this.prisma.group.findUnique({
-      where: userWhereUniqueInput,
-    });
+  async statuses(): Promise<GroupStatus[]> {
+    return this.prisma.groupStatus.findMany();
   }
 
-  async groups(params: {
-    skip?: number;
-    take?: number;
-    where?: Prisma.GroupWhereInput;
-    orderBy?: Prisma.GroupOrderByWithRelationInput;
-  }): Promise<Group[]> {
-    const { skip, take, where, orderBy } = params;
-    return this.prisma.group.findMany({
-      skip,
-      take,
-      where,
-      orderBy,
-    });
-  }
-
-  async studentsByGroupId(groupId: number): Promise<Student[]> {
-    return this.prisma.student.findMany({
-      where: {
-        currentGroupId: groupId,
+  async groupByStatus(statusText: Exclude<GroupStatusText, 'Выпустилась'>): Promise<Group> {
+    const allGroups = await this.prisma.group.findMany({
+      include: {
+        events: {
+          include: {
+            status: true,
+          },
+        },
       },
     });
+    const targetGroup = allGroups.find((group) => {
+      const latestEvent = [...group.events].sort((e1, e2) => e2.id - e1.id).at(0);
+      return latestEvent?.status.text === statusText;
+    });
+    return targetGroup;
   }
 }

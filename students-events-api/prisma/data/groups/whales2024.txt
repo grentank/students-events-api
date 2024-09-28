@@ -5,7 +5,7 @@ https://drive.google.com/drive/folders/12Oon0sRlL4JFAxYnUyqWLUWL_myLtXIW?usp=sha
 
 Дарья Воронина	daria_voronina@list.ru	https://github.com/DariaVor
 Илья Лобастов	ilobastov@mail.ru	https://github.com/IliaLobastov
-Сиёвуш Хасанов (Шод)	khasanov00@inbox.ru	https://github.com/ShodmonKhasanov
+Сиёвуш Хасанов	khasanov00@inbox.ru	https://github.com/ShodmonKhasanov
 Алексей Кудрявцев	renenkton123@yandex.ru	https://github.com/AlexeyKudr
 Илья Митькин	ilia.mitkin@gmail.com	https://github.com/iliamitkin
 Антон Вольский	antonvolsky@gmail.com	https://github.com/1replica5
