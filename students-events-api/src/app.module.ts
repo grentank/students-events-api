@@ -6,10 +6,23 @@ import { GroupsController } from './groups/groups.controller';
 import { GroupsService } from './groups/groups.service';
 import { StudentsEventsService } from './studentsEvents/studentsEvents.service';
 import { StudentsEventsController } from './studentsEvents/studentsEvents.controller';
+import { GroupStatusController } from './groupStatuses/groupStatus.controller';
+import { GroupStatusService } from './groupStatuses/groupStatus.service';
 
 @Module({
   imports: [],
-  controllers: [StudentsController, GroupsController, StudentsEventsController],
-  providers: [PrismaService, StudentService, GroupsService, StudentsEventsService],
+  controllers: [
+    StudentsController,
+    GroupsController,
+    StudentsEventsController,
+    GroupStatusController,
+  ],
+  providers: [
+    PrismaService,
+    StudentService,
+    GroupsService,
+    StudentsEventsService,
+    GroupStatusService,
+  ],
 })
 export class AppModule {}

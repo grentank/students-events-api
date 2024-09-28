@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Group, GroupStatus, Prisma, Student } from '@prisma/client';
+import { Group, GroupStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { GroupStatusText } from './groupStatus.schema';
 

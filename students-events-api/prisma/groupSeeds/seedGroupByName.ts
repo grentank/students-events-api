@@ -18,11 +18,13 @@ async function seedGroupByName(groupName: string, prisma: PrismaClient) {
     data: studentsData.split('\n').map((row) => ({
       firstName: row.split('\t')[0].split(' ')[0],
       lastName: row.split('\t')[0].split(' ')[1],
+      secondName: row.split('\t')[0].split(' ')[2],
       email: row.split('\t')[1],
       git: row.split('\t')[2],
       currentGroupId: group.id,
     })),
   });
+  console.log(`${groupName} created`);
 }
 
 export default async function seedGroupsFromDataFolder(prisma: PrismaClient) {

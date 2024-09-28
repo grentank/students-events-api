@@ -21,7 +21,8 @@ async function seedStudentsFile(filename, prisma: PrismaClient) {
   // Через Promise.all БД не успевает обработать все запросы
   // приходится писать через for
   const rows = fileData.split('\n');
-  for (const row of rows) {
+  for (let index = 0; index < rows.length; index++) {
+    const row = rows[index];
     const [name, ...events] = row.split(';');
     const [firstName, lastName, secondName] = name.split(' ');
     const student = await prisma.student.findFirst({ where: { firstName, lastName, secondName } });
@@ -34,6 +35,7 @@ async function seedStudentsFile(filename, prisma: PrismaClient) {
     await prisma.studentEvent.createMany({
       data: addExamEvents(eventObjects),
     });
+    console.log(`${index + 1/rows.length}% -- ${name} -- events seeded`);
   }
 }
 
@@ -44,16 +46,22 @@ function addExamEvents(
   for (let index = 0; index < events.length; index++) {
     const event = events[index];
     const { studentId, createdAt, statusId } = event;
-    // Экзамен на 1 фазе проходит на 5 дней раньше, чем перевод на 2-ую
-    if (statusId === 3 || statusId === 6 || statusId === 10) {
+    // Экзамен на 0 фазе проходит в пятницу, на 3 дня раньше, чем перевод на 1-ую
+    if (statusId === 2 || statusId === 5 || statusId === 9 || statusId === 24) {
       const eventDate = new Date(createdAt);
-      eventDate.setDate(createdAt.getDate() - 5);
+      eventDate.setDate(createdAt.getDate() - 3);
+      newEvents.push({ studentId, statusId: statusId === 2 ? 29 : 33, createdAt: eventDate });
+    }
+    // Экзамен на 1 фазе проходит на 5 дней раньше, чем перевод на 2-ую
+    if (statusId === 3 || statusId === 6 || statusId === 10 || statusId === 25) {
+      const eventDate = new Date(createdAt);
+      eventDate.setDate(createdAt.getDate() - 4);
       newEvents.push({ studentId, statusId: statusId === 3 ? 29 : 33, createdAt: eventDate });
     }
     // Экзамен на 2 фазе проходит на 4 дня раньше (четверг), чем перевод на 2-ую
-    if (statusId === 4 || statusId === 7 || statusId === 11) {
+    if (statusId === 4 || statusId === 7 || statusId === 11 || statusId === 26) {
       const eventDate = new Date(createdAt);
-      eventDate.setDate(createdAt.getDate() - 4);
+      eventDate.setDate(createdAt.getDate() - 5);
       newEvents.push({ studentId, statusId: statusId === 4 ? 30 : 34, createdAt: eventDate });
     }
     // Успешный экзамен на 3 фазе за 12 дней до карьерки
@@ -63,9 +71,9 @@ function addExamEvents(
       newEvents.push({ studentId, statusId: 31, createdAt: eventDate });
     }
     // Неуспешный экзамен на 3 фазе (даже если повтор) за 5 дней до сп и за 12 дней до повтора
-    if (statusId === 12 || statusId === 8) {
+    if (statusId === 12 || statusId === 8 || statusId === 27) {
       const eventDate = new Date(createdAt);
-      eventDate.setDate(createdAt.getDate() - (statusId === 12 ? 5 : 12));
+      eventDate.setDate(createdAt.getDate() - (statusId === 8 ? 12 : 5));
       newEvents.push({ studentId, statusId: 35, createdAt: eventDate });
     }
     // Проверка на каникулы, которые могли быть до перевода на следующую фазу
