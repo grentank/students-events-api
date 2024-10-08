@@ -14,5 +14,6 @@ https://drive.google.com/
 Алексей Плеханов	plehanov234@gmail.com	https://github.com/Alexey-Plekhanov
 Иван Николаев	nikolaev97@internet.ru	https://github.com/Nordwayr
 Кирилл Костыков	kkostykov@gmail.com	https://github.com/Kirill-begemot
-Михаил Васильев	m@mv03.ru	https://github.com/csiop
 Расул Магомедов	mrn_0593@mail.ru	https://github.com/Rasulio05
+Борис Бочкарев	bbochkarev@yandex.ru	https://github.com/BorisVargi
+Виктор Серебрин	serebrinv@gmail.com	https://github.com/wastor3332

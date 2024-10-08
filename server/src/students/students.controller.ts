@@ -13,6 +13,6 @@ export class StudentsController {
 
   @Get('active')
   getActiveStudents() {
-    return [];
+    return this.service.getActive();
   }
 }

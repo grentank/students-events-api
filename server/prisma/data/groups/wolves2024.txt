@@ -8,5 +8,4 @@ https://drive.google.com/drive/folders/1DbWFZ_xjUdZI9yOhfoWYW22QRGdeMHnh?usp=dri
 Сергей Антипов	antip99999@mail.ru	https://github.com/AntipovSergey
 София Лидская	sofiya.lidskya@gmail.com	https://github.com/SLidskaya
 Бата Эвенов	ewenov@yandex.ru	https://github.com/BataEvenov
-Борис Бочкарев	bbochkarev@yandex.ru	https://github.com/BorisVargi
-Виктор Серебрин	serebrinv@gmail.com	https://github.com/wastor3332
+Михаил Васильев	m@mv03.ru	https://github.com/csiop
