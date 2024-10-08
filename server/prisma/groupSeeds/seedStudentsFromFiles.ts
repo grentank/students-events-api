@@ -35,7 +35,7 @@ async function seedStudentsFile(filename, prisma: PrismaClient) {
     await prisma.studentEvent.createMany({
       data: addExamEvents(eventObjects),
     });
-    console.log(`${index + 1/rows.length}% -- ${name} -- events seeded`);
+    console.log(`${filename}: ${Math.floor((index + 1)/rows.length)}%\t\t${name} -- done`);
   }
 }
 
