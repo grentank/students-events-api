@@ -15,4 +15,9 @@ export class StudentsController {
   getActiveStudents() {
     return this.service.getActive();
   }
+
+  @Get('campusLoad')
+  getCampusLoad() {
+    return this.service.getCampusLoad();
+  }
 }
