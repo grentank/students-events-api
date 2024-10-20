@@ -50,7 +50,7 @@ function addExamEvents(
     if (statusId === 2 || statusId === 5 || statusId === 9 || statusId === 24) {
       const eventDate = new Date(createdAt);
       eventDate.setDate(createdAt.getDate() - 3);
-      newEvents.push({ studentId, statusId: statusId === 2 ? 29 : 33, createdAt: eventDate });
+      newEvents.push({ studentId, statusId: statusId === 2 ? 28 : 32, createdAt: eventDate });
     }
     // Экзамен на 1 фазе проходит на 5 дней раньше, чем перевод на 2-ую
     if (statusId === 3 || statusId === 6 || statusId === 10 || statusId === 25) {
