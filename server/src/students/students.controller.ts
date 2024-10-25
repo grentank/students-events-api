@@ -20,4 +20,9 @@ export class StudentsController {
   getCampusLoad() {
     return this.service.getCampusLoad();
   }
+
+  @Get('exams')
+  getExamAttempts() {
+    return this.service.getExamAttempts();
+  }
 }

@@ -146,6 +146,35 @@ export class StudentService {
     return activeCounts; //countActiveStudentsPerWeek(activeStuds);
   }
 
+  async getExamAttempts() {
+    const allStudentsWithEvents = await this.prisma.student.findMany({ include: { events: true } });
+    const hasStudiedId = (id: number): boolean => id >= 2 && id <= 27;
+    const studentsWithRepeats = allStudentsWithEvents
+      .filter((student) => student.events.find((e) => hasStudiedId(e.statusId)))
+      .map((student) => {
+        const repeats = student.events.reduce(
+          (a, e) => (e.statusId >= 33 && e.statusId <= 35 ? a + 1 : a),
+          0,
+        );
+        const repeatsByPhase = [1, 2, 3].map(
+          (phase) => student.events.filter((e) => e.statusId === 32 + phase).length,
+        );
+        return { ...student, repeats, repeatsByPhase };
+      });
+    const averageRepeats =
+      studentsWithRepeats.reduce((a, s) => a + s.repeats, 0) / studentsWithRepeats.length;
+    await require('fs/promises').writeFile(
+      'repeats.txt',
+      averageRepeats +
+        '\n' +
+        studentsWithRepeats
+          .map((s) => `${s.repeats}\t${s.repeatsByPhase.join('\t')}\t${s.firstName} ${s.lastName}`)
+          .join('\n'),
+      'utf8',
+    );
+    return studentsWithRepeats.map(({ firstName, lastName, repeats, repeatsByPhase, secondName }) => ({ firstName, lastName, repeats, repeatsByPhase, secondName }));
+  }
+
   async getStudentsByPhase(phase: number | string): Promise<Student[]> {
     const allGroups = await this.prisma.group.findMany({
       include: {
