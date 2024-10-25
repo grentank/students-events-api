@@ -34,7 +34,7 @@ export class StudentService {
       return s;
     });
     const startDate = new Date('2023-01-02'); // Начало с 2 января 2023 года (понедельник)
-    const endDate = new Date('2024-10-14'); // Последний понедельник, который нужно обработать
+    const endDate = new Date('2024-11-04'); // Последний понедельник, который нужно обработать
     const oneWeek = 7 * 24 * 60 * 60 * 1000; // Количество миллисекунд в одной неделе
 
     // Функция для определения активности студента на основе его событий
@@ -63,9 +63,17 @@ export class StudentService {
           activeWeeks.push({ date: new Date(currentDate), active: currentlyActive });
         } else {
           const continueEvent = weekEvents.find((e) => e.statusId === 20);
-          const otherEvent = weekEvents.find((e) => e.statusId !== 20);
-          currentlyActive = isActive(otherEvent.statusId);
-          activeWeeks.push({ date: new Date(currentDate), active: currentlyActive });
+          if (continueEvent) {
+            const otherEvent = weekEvents.find((e) => e.statusId !== 20);
+            currentlyActive = isActive(otherEvent.statusId);
+            activeWeeks.push({ date: new Date(currentDate), active: currentlyActive });
+          } else {
+            const isStopId = (id: number): boolean =>
+              (id >= 9 && id <= 16) || (id >= 21 && id <= 27) || id === 19;
+            const stopEvent = weekEvents.find((e) => isStopId(e.statusId));
+            currentlyActive = !stopEvent;
+            activeWeeks.push({ date: new Date(currentDate), active: currentlyActive });
+          }
         }
 
         // const lastEvent = weekEvents[weekEvents.length - 1]; // Последнее событие на текущий момент
@@ -106,7 +114,11 @@ export class StudentService {
     // Инициализируем массив для хранения количества активных студентов на каждую неделю
     const activeCounts: { students: string[]; count: number; date: Date }[] = Array(numberOfWeeks)
       .fill(null)
-      .map(() => ({ students: [], count: 0, date: null }));
+      .map((_, ind) => ({
+        students: [],
+        count: 0,
+        date: new Date(startDate.valueOf() + ind * oneWeek),
+      }));
 
     // Пробегаем по каждому студенту и по каждой неделе
     // console.log(students);

@@ -31,5 +31,9 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default async function seedGroupsFromDataFolder(prisma: PrismaClient) {
   const filenames = await readdir('./prisma/data/groups', 'utf8');
-  return Promise.all(filenames.map((filename, index) => wait(index * 500).then(() => seedGroupByName(filename, prisma))));
+  return Promise.all(
+    filenames.map((filename, index) =>
+      wait(index * 0).then(() => seedGroupByName(filename, prisma)),
+    ),
+  );
 }
