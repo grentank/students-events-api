@@ -33,7 +33,7 @@ export default async function seedGroupsFromDataFolder(prisma: PrismaClient) {
   const filenames = await readdir('./prisma/data/groups', 'utf8');
   return Promise.all(
     filenames.map((filename, index) =>
-      wait(index * 0).then(() => seedGroupByName(filename, prisma)),
+      wait(index * 200).then(() => seedGroupByName(filename, prisma)),
     ),
   );
 }
