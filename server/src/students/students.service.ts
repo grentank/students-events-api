@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Student } from '@prisma/client';
+import { Prisma, Student, StudentEvent } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import fs from 'fs/promises';
 
@@ -34,7 +34,7 @@ export class StudentService {
       return s;
     });
     const startDate = new Date('2023-01-02'); // Начало с 2 января 2023 года (понедельник)
-    const endDate = new Date('2024-11-04'); // Последний понедельник, который нужно обработать
+    const endDate = new Date('2024-11-18'); // Последний понедельник, который нужно обработать
     const oneWeek = 7 * 24 * 60 * 60 * 1000; // Количество миллисекунд в одной неделе
 
     // Функция для определения активности студента на основе его событий
@@ -172,7 +172,70 @@ export class StudentService {
           .join('\n'),
       'utf8',
     );
-    return studentsWithRepeats.map(({ firstName, lastName, repeats, repeatsByPhase, secondName }) => ({ firstName, lastName, repeats, repeatsByPhase, secondName }));
+    return studentsWithRepeats.map(
+      ({ firstName, lastName, repeats, repeatsByPhase, secondName }) => ({
+        firstName,
+        lastName,
+        repeats,
+        repeatsByPhase,
+        secondName,
+      }),
+    );
+  }
+
+  async passesAndRepeats() {
+    const allStudentsWithEvents = await this.prisma.student.findMany({ include: { events: true } });
+    // const hasPassed2Phase = (events: StudentEvent[]) => !!events.find(({statusId}) => statusId === 4)
+    const hasPassed2PhaseWithoutRepeats = (events: StudentEvent[]) =>
+      events.find(({ statusId }) => statusId === 3) &&
+      events.find(({ statusId }) => statusId === 4) &&
+      events.every(({ statusId }) => statusId !== 7 && statusId !== 11);
+    const hasNoRepeats = (events: StudentEvent[]) =>
+      events.every(({ statusId }) => ![6, 7, 8, 10, 11, 12].includes(statusId));
+    const hasFinishedEducation = (events: StudentEvent[]) =>
+      !!events.find(({ statusId }) => statusId === 17);
+    const hasFailed1PhaseAtLeastOnce = (events: StudentEvent[]) =>
+      events.some(({ statusId }) => statusId === 10 || statusId === 6);
+    const hasFailedOnOtherPhasesAfterFailingPhase1 = (events: StudentEvent[]) =>
+      hasFailed1PhaseAtLeastOnce(events) &&
+      events.some(({ statusId }) => [7, 8, 10, 11, 12].includes(statusId));
+    const result = {
+      hasPassed2PhaseWithoutRepeats: 0,
+      hasNoRepeats: 0,
+      hasRepeatsOnPhases1Or3: 0,
+      hasFailed1PhaseAtLeastOnce: 0,
+      hasFailedOnOtherPhasesAfterFailingPhase1: 0,
+      hasNotFailedAfterPhase1: 0,
+    };
+    for (const student of allStudentsWithEvents) {
+      const { events } = student;
+      const passed2PhaseWithoutRepeats = hasPassed2PhaseWithoutRepeats(events);
+      const noRepeats = hasNoRepeats(events);
+      const finishedEducation = hasFinishedEducation(events);
+      if (passed2PhaseWithoutRepeats && noRepeats && finishedEducation) {
+        result.hasPassed2PhaseWithoutRepeats++;
+        result.hasNoRepeats++;
+      } else if (passed2PhaseWithoutRepeats && !noRepeats) {
+        result.hasPassed2PhaseWithoutRepeats++;
+        result.hasRepeatsOnPhases1Or3++;
+      }
+
+      const failed1PhaseAtLeastOnce = hasFailed1PhaseAtLeastOnce(events);
+      const failedOnOtherPhasesAfterFailingPhase1 =
+        hasFailedOnOtherPhasesAfterFailingPhase1(events);
+      if (failed1PhaseAtLeastOnce && failedOnOtherPhasesAfterFailingPhase1) {
+        result.hasFailed1PhaseAtLeastOnce++;
+        result.hasFailedOnOtherPhasesAfterFailingPhase1++;
+      } else if (
+        failed1PhaseAtLeastOnce &&
+        !failedOnOtherPhasesAfterFailingPhase1 &&
+        finishedEducation
+      ) {
+        result.hasFailed1PhaseAtLeastOnce++;
+        result.hasNotFailedAfterPhase1++;
+      }
+    }
+    return result;
   }
 
   async getStudentsByPhase(phase: number | string): Promise<Student[]> {

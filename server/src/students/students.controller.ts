@@ -25,4 +25,9 @@ export class StudentsController {
   getExamAttempts() {
     return this.service.getExamAttempts();
   }
+
+  @Get('passes-repeats')
+  getPassesRepeats() {
+    return this.service.passesAndRepeats();
+  }
 }
